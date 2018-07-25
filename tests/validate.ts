@@ -1,12 +1,10 @@
 import { expect } from 'chai';
 import { sequenceSatisfiesConstraint, containsTouchingTents, containsLoneTent, containsLoneTree, tentTreeBijectionExists } from '../src/validate';
 import { parseRow, parse } from '../src/parse';
+import { show } from './show-grid';
 
 
-function cleanString(string : string)
-{
-    return string.trim().split('\n').map(s => s.trim()).join("|");
-}
+
 
 describe('sequenceSatisfiesConstraint', () => {
 
@@ -46,7 +44,7 @@ describe('containsTouchingTents', () => {
     {
         const grid = parse(string);
 
-        it(`${cleanString(string)} contains touching tents`, () => {
+        it(`${show(grid)} contains touching tents`, () => {
             expect(containsTouchingTents(grid)).to.be.true;
         });
     }
@@ -55,7 +53,7 @@ describe('containsTouchingTents', () => {
     {
         const grid = parse(string);
 
-        it(`${cleanString(string)} does not contain touching tents`, () => {
+        it(`${show(grid)} does not contain touching tents`, () => {
             expect(containsTouchingTents(grid)).to.be.false;
         });
     }
@@ -99,7 +97,7 @@ describe('containsLoneTent', () => {
     {
         const grid = parse(string);
 
-        it(`${cleanString(string)} contains a lone tent`, () => {
+        it(`${show(grid)} contains a lone tent`, () => {
             expect(containsLoneTent(grid)).to.be.true;
         });
     }
@@ -108,7 +106,7 @@ describe('containsLoneTent', () => {
     {
         const grid = parse(string);
 
-        it(`${cleanString(string)} does not contain a lone tent`, () => {
+        it(`${show(grid)} does not contain a lone tent`, () => {
             expect(containsLoneTent(grid)).to.be.false;
         });
     }
@@ -140,7 +138,7 @@ describe('containsLoneTree', () => {
     {
         const grid = parse(string);
 
-        it(`${cleanString(string)} contains a lone tree`, () => {
+        it(`${show(grid)} contains a lone tree`, () => {
             expect(containsLoneTree(grid)).to.be.true;
         });
     }
@@ -149,7 +147,7 @@ describe('containsLoneTree', () => {
     {
         const grid = parse(string);
 
-        it(`${cleanString(string)} does not contain a lone tree`, () => {
+        it(`${show(grid)} does not contain a lone tree`, () => {
             expect(containsLoneTree(grid)).to.be.false;
         });
     }
@@ -181,7 +179,7 @@ describe('tentTreeBijectionExists', () => {
     {
         const grid = parse(string);
 
-        it(`${cleanString(string)} has a tent-tree bijection`, () => {
+        it(`${show(grid)} has a tent-tree bijection`, () => {
             expect(tentTreeBijectionExists(grid)).to.be.true;
         });
     }
@@ -190,7 +188,7 @@ describe('tentTreeBijectionExists', () => {
     {
         const grid = parse(string);
 
-        it(`${cleanString(string)} does not have a tent-tree bijection`, () => {
+        it(`${show(grid)} does not have a tent-tree bijection`, () => {
             expect(tentTreeBijectionExists(grid)).to.be.false;
         });
     }
