@@ -1,0 +1,45 @@
+{
+  "name": "trees-and-tents",
+  "version": "0.0.1",
+  "description": "Trees and tents solver",
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "npm run build",
+    "clean": "rm -rf dist",
+    "build": "webpack --mode development",
+    "production": "webpack --mode production",
+    "test": "mocha -r ts-node/register ./tests/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UCLeuvenLimburg/maybe.git"
+  },
+  "keywords": [],
+  "author": "Frederic Vogels",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/UCLeuvenLimburg/maybe/issues"
+  },
+  "homepage": "https://github.com/UCLeuvenLimburg/maybe#readme",
+  "devDependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/mocha": "^5.2.5",
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
+    "ts-loader": "^4.4.2",
+    "ts-node": "^7.0.0",
+    "tslint": "^5.11.0",
+    "tslint-loader": "^3.6.0",
+    "typescript": "^2.9.2",
+    "webpack": "^4.16.2",
+    "webpack-cli": "^3.1.0"
+  },
+  "dependencies": {
+    "js-algorithms": "github:UCLeuvenLimburg/js-algorithms",
+    "maybe": "github:UCLeuvenLimburg/maybe"
+  }
+}
