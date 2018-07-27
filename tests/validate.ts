@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { sequenceSatisfiesConstraint, containsTouchingTents, containsLoneTent, containsLoneTree, tentTreeBijectionExists } from '../src/validate';
-import { parseRow, parse } from '../src/parse';
-import { show } from './show-grid';
+import { parse, parseSequence } from '../src/parse';
+import { show } from '../src/show';
 
 
 
@@ -10,7 +10,7 @@ describe('sequenceSatisfiesConstraint', () => {
 
     function satisfies(string : string, constraint : number)
     {
-        const sequence = parseRow(string);
+        const sequence = parseSequence(string);
 
         it(`'${string}' satisfies constraint ${constraint}`, () => {
             expect( sequenceSatisfiesConstraint(sequence, constraint) ).to.be.true;
@@ -19,7 +19,7 @@ describe('sequenceSatisfiesConstraint', () => {
 
     function doesNotSatisfy(string : string, constraint : number)
     {
-        const sequence = parseRow(string);
+        const sequence = parseSequence(string);
 
         it(`'${string}' satisfies constraint ${constraint}`, () => {
             expect( sequenceSatisfiesConstraint(sequence, constraint) ).to.be.false;

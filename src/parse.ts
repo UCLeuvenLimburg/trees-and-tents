@@ -1,6 +1,6 @@
 import { Grid, createGrid } from 'js-algorithms';
 import { Square } from "./square";
-import { State } from './state';
+import { State } from "./state";
 
 
 export function parse(string : string) : Grid<Square>
@@ -12,7 +12,7 @@ export function parse(string : string) : Grid<Square>
     return createGrid<Square>(width, height, p => new Square(parseChar(lines[p.y][p.x])));
 }
 
-export function parseRow(string : string) : Square[]
+export function parseSequence(string : string) : Square[]
 {
     return parse(string).row(0);
 }

@@ -8,9 +8,9 @@ export class Square
         this.state = initialValue;
     }
 
-    state : State;
+    public state : State;
 
-    copy() : Square
+    public copy() : Square
     {
         return new Square(this.state);
     }

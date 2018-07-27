@@ -1,6 +1,7 @@
-import { Square } from "./square";
 import { count, Grid, all, range, any, Position, filter, indices } from "js-algorithms";
+import { Square } from "./square";
 import { State } from "./state";
+import { hasTreeAround, isTentAt, hasTentAround, isTreeAt, noUnknownsLeft, isUnknownAt } from "./util";
 
 
 export function sequenceSatisfiesConstraint(sequence : Square[], constraint : number) : boolean
@@ -23,7 +24,7 @@ function rowsSatisfyConstraints(grid : Grid<Square>, rowConstraints : number[]) 
 
 function columnsSatisfyConstraints(grid : Grid<Square>, columnConstraints : number[]) : boolean
 {
-    return all( range(0, grid.width), x => sequenceSatisfiesConstraint(grid.row(x), columnConstraints[x]) );
+    return all( range(0, grid.width), x => sequenceSatisfiesConstraint(grid.column(x), columnConstraints[x]) );
 }
 
 export function containsTouchingTents(grid : Grid<Square>) : boolean
@@ -33,14 +34,7 @@ export function containsTouchingTents(grid : Grid<Square>) : boolean
 
 function tentsTouchAt(grid : Grid<Square>, position : Position) : boolean
 {
-    if ( grid.at(position).state === State.Tent )
-    {
-        return any(grid.around8(position), p => grid.at(p).state === State.Tent);
-    }
-    else
-    {
-        return false;
-    }
+    return isTentAt(grid, position) && hasTentAround(grid, position);    
 }
 
 export function containsLoneTree(grid : Grid<Square>) : boolean
@@ -50,7 +44,7 @@ export function containsLoneTree(grid : Grid<Square>) : boolean
 
 function isLoneTree(grid : Grid<Square>, position : Position) : boolean
 {
-    if ( grid.at(position).state === State.Tree )
+    if ( isTreeAt(grid, position) )
     {
         return all( grid.around4(position), p => noTent(p) );
     }
@@ -74,14 +68,7 @@ export function containsLoneTent(grid : Grid<Square>) : boolean
 
 function isLoneTent(grid : Grid<Square>, position : Position) : boolean
 {
-    if ( grid.at(position).state === State.Tent )
-    {
-        return all( grid.around4(position), p => grid.at(p).state !== State.Tree );
-    }
-    else
-    {
-        return false;
-    }
+    return isTentAt(grid, position) && !hasTreeAround(grid, position);    
 }
 
 export function tentTreeBijectionExists(grid : Grid<Square>) : boolean
@@ -91,7 +78,7 @@ export function tentTreeBijectionExists(grid : Grid<Square>) : boolean
 
     if ( trees.length === tents.length )
     {
-        return associate(trees, tents)
+        return associate(trees, tents);
     }
     else
     {
@@ -174,4 +161,14 @@ export function tentTreeBijectionExists(grid : Grid<Square>) : boolean
 
         return true;
     }
+}
+
+export function isValid(grid : Grid<Square>, rowConstraints : number[], columnConstraints : number[]) : boolean
+{
+    return gridSatisfiesConstraints(grid, rowConstraints, columnConstraints) && !containsTouchingTents(grid);
+}
+
+export function isSolved(grid : Grid<Square>, rowConstraints : number[], columnConstraints : number[]) : boolean
+{
+    return noUnknownsLeft(grid) && gridSatisfiesConstraints(grid, rowConstraints, columnConstraints) && !containsTouchingTents(grid) && tentTreeBijectionExists(grid);
 }

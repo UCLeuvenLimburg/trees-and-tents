@@ -1,0 +1,10 @@
+import { Grid } from "js-algorithms";
+import { Square } from "./square";
+export declare function sequenceSatisfiesConstraint(sequence: Square[], constraint: number): boolean;
+export declare function gridSatisfiesConstraints(grid: Grid<Square>, rowConstraints: number[], columnConstraints: number[]): boolean;
+export declare function containsTouchingTents(grid: Grid<Square>): boolean;
+export declare function containsLoneTree(grid: Grid<Square>): boolean;
+export declare function containsLoneTent(grid: Grid<Square>): boolean;
+export declare function tentTreeBijectionExists(grid: Grid<Square>): boolean;
+export declare function isValid(grid: Grid<Square>, rowConstraints: number[], columnConstraints: number[]): boolean;
+export declare function isSolved(grid: Grid<Square>, rowConstraints: number[], columnConstraints: number[]): boolean;

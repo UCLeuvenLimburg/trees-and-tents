@@ -1,0 +1,16 @@
+import { Grid, Position } from "js-algorithms";
+import { Square } from "./square";
+export declare function isUnknownAt(grid: Grid<Square>, position: Position): boolean;
+export declare function isTreeAt(grid: Grid<Square>, position: Position): boolean;
+export declare function isTentAt(grid: Grid<Square>, position: Position): boolean;
+export declare function isEmptyAt(grid: Grid<Square>, position: Position): boolean;
+export declare function hasTreeAround(grid: Grid<Square>, position: Position): boolean;
+export declare function hasTentAround(grid: Grid<Square>, position: Position): boolean;
+export declare function noUnknownsLeft(grid: Grid<Square>): boolean;
+export declare function unknownCount(grid: Grid<Square>): number;
+export declare function unknownsAround(grid: Grid<Square>, position: Position): Position[];
+export declare function countEmptyAround(grid: Grid<Square>, position: Position): number;
+export declare function copy(grid: Grid<Square>): Grid<Square>;
+export declare function copySequence(sequence: Square[]): Square[];
+export declare function show(grid: Grid<Square>): string;
+export declare function showSequence(sequence: Square[]): string;
