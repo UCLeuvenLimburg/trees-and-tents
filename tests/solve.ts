@@ -48,7 +48,7 @@ describe('generateSolutions', () => {
         const actual = Array.from( generateSolutions(unsolvedGrid, rowConstraints, columnConstraints) );
         const after = new Date().getTime();
 
-        console.log(`Solved in ${(after-before) / 1000}ms`);
+        console.log(`Solved in ${(after-before) / 1000}s`);
 
         describe(`${show(solvedGrid)}`, () => {
             it(`has only one solution`, () => {
