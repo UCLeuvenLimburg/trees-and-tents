@@ -3,12 +3,7 @@ import { State } from './state';
 
 export class Square
 {
-    constructor(initialValue : State)
-    {
-        this.state = initialValue;
-    }
-
-    public state : State;
+    constructor(public state : State) { }
 
     public copy() : Square
     {

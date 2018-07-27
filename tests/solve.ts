@@ -145,28 +145,28 @@ describe('generateSolutions', () => {
     .t..tTtTtTtT.tTt
     `);
 
-    check(`
-    ..t...............Tt
-    tTTTt.tTt.tT.tTt.t..
-    ......T.......TT.T.t
-    .tT....tTT..t.t.tT.T
-    T..Tt....t..T....Tt.
-    t.t.......Tt...Tt...
-    ..TTtTt..tT..Tt...tT
-    tTt.........tT.Tt..T
-    T.T........T.......t
-    t...tT.tTt.t..tT.t..
-    ..tT..TT.........T..
-    tT..T.tTt.tTtTTt..t.
-    .Tt.t.T...........T.
-    ......t.t.tTt..T...t
-    t.......TTT....t.tTT
-    T..t..t..t.Tt..T..Tt
-    T..T..T........tTt..
-    t..TTt.tTtTTt......t
-    ...t.T......T.TtTt.T
-    Tt...tTtTt..t.....Tt
-    `);
+    // check(`
+    // ..t...............Tt
+    // tTTTt.tTt.tT.tTt.t..
+    // ......T.......TT.T.t
+    // .tT....tTT..t.t.tT.T
+    // T..Tt....t..T....Tt.
+    // t.t.......Tt...Tt...
+    // ..TTtTt..tT..Tt...tT
+    // tTt.........tT.Tt..T
+    // T.T........T.......t
+    // t...tT.tTt.t..tT.t..
+    // ..tT..TT.........T..
+    // tT..T.tTt.tTtTTt..t.
+    // .Tt.t.T...........T.
+    // ......t.t.tTt..T...t
+    // t.......TTT....t.tTT
+    // T..t..t..t.Tt..T..Tt
+    // T..T..T........tTt..
+    // t..TTt.tTtTTt......t
+    // ...t.T......T.TtTt.T
+    // Tt...tTtTt..t.....Tt
+    // `);
 });
 
 

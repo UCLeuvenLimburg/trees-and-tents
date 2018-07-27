@@ -1,7 +1,7 @@
 import { count, Grid, all, range, any, Position, filter, indices } from "js-algorithms";
 import { Square } from "./square";
 import { State } from "./state";
-import { hasTreeAround, isTentAt, hasTentAround, isTreeAt, noUnknownsLeft, isUnknownAt } from "./util";
+import { hasTreeAround, isTentAt, hasTentAround8, isTreeAt, noUnknownsLeft, isUnknownAt } from "./util";
 
 
 export function sequenceSatisfiesConstraint(sequence : Square[], constraint : number) : boolean
@@ -34,7 +34,7 @@ export function containsTouchingTents(grid : Grid<Square>) : boolean
 
 function tentsTouchAt(grid : Grid<Square>, position : Position) : boolean
 {
-    return isTentAt(grid, position) && hasTentAround(grid, position);    
+    return isTentAt(grid, position) && hasTentAround8(grid, position);    
 }
 
 export function containsLoneTree(grid : Grid<Square>) : boolean

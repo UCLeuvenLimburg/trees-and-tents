@@ -28,7 +28,7 @@ export function hasTreeAround(grid : Grid<Square>, position : Position) : boolea
     return any(grid.around4(position), p => grid.at(p).state === State.Tree);
 }
 
-export function hasTentAround(grid : Grid<Square>, position : Position) : boolean
+export function hasTentAround8(grid : Grid<Square>, position : Position) : boolean
 {
     return any(grid.around8(position), p => grid.at(p).state === State.Tent);
 }
@@ -51,6 +51,11 @@ export function unknownsAround(grid : Grid<Square>, position : Position) : Posit
 export function countEmptyAround(grid : Grid<Square>, position : Position) : number
 {
     return count(grid.around4(position), p => isEmptyAt(grid, p));
+}
+
+export function countTreesAround(grid : Grid<Square>, position : Position) : number
+{
+    return count(grid.around4(position), p => isTreeAt(grid, p));
 }
 
 export function copy(grid : Grid<Square>) : Grid<Square>
@@ -80,5 +85,34 @@ export function showSequence(sequence : Square[]) : string
         else if ( c === State.Tree ) return 'T';
         else if ( c === State.Unknown ) return '?';
         else throw new Error(`Bug`);
+    }
+}
+
+export function surroundWithEmpty(grid : Grid<Square>, position : Position) : boolean
+{
+    for ( let p of grid.around8(position) )
+    {
+        if ( isTentAt(grid, p) )
+        {
+            return false;
+        }
+        else if ( isUnknownAt(grid, p) )
+        {
+            grid.at(p).state = State.Empty;
+        }
+    }
+
+    return true;
+}
+
+export function surroundWithEmptyIfTent(grid : Grid<Square>, position : Position) : boolean
+{
+    if ( isTentAt(grid, position) )
+    {
+        return surroundWithEmpty(grid, position);
+    }
+    else
+    {
+        return true;
     }
 }

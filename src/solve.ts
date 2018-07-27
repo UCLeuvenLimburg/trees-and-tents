@@ -1,9 +1,9 @@
-import { Grid, Position, all, find, count, createArray, repeat, indices, any, range, filter } from "js-algorithms";
+import { Grid, IGridIterator, Position, all, find, count, createArray, repeat, any, range, filter, minimumBy, maximumBy } from "js-algorithms";
 import { Maybe } from "maybe";
 import { Square } from "./square";
 import { State } from "./state";
 import { isSolved, isValid } from "./validate";
-import { hasTreeAround, isUnknownAt, isTreeAt, hasTentAround, unknownCount, noUnknownsLeft, countEmptyAround, unknownsAround, copy, copySequence, showSequence, show } from "./util";
+import { hasTreeAround, isUnknownAt, isTreeAt, hasTentAround8, unknownCount, noUnknownsLeft, countEmptyAround, unknownsAround, copy, copySequence, showSequence, show, surroundWithEmpty, isTentAt, countTreesAround } from "./util";
 
 
 export function* generateSolutions(grid : Grid<Square>, rowConstraints : number[], columnConstraints : number[]) : Iterable<Grid<Square>>
@@ -40,7 +40,7 @@ function simplifyGrid(grid : Grid<Square>, rowConstraints : number[], columnCons
 {
     let lastCount = Number.POSITIVE_INFINITY;
     let simplifiers = [
-        () => placeTentNextToTreesSurroundedByThreeEmptySquares(grid),
+        () => surroundTentsWithEmpty(grid) && placeTentNextToTreesSurroundedByThreeEmptySquares(grid),
         () => fillInUnambiguousSquares(grid, rowConstraints, columnConstraints),
         () => addPossibilityIntersections(grid, rowConstraints, columnConstraints)
     ];
@@ -48,7 +48,6 @@ function simplifyGrid(grid : Grid<Square>, rowConstraints : number[], columnCons
     let i = 0;
     while ( i < simplifiers.length )
     {
-        // console.log(`Simplifier ${i}`);
         const simplifier = simplifiers[i];
         simplifier();
         const currentMetric = unknownCount(grid);
@@ -71,7 +70,7 @@ function simplifyGrid(grid : Grid<Square>, rowConstraints : number[], columnCons
 
 function* guess(grid : Grid<Square>, rowConstraints : number[], columnConstraints : number[]) : Iterable<Grid<Square>>
 {
-    const maybeUnknownPosition = findUnknownPosition(grid);
+    const maybeUnknownPosition = pickPosition();
 
     if ( maybeUnknownPosition.isJust() )
     {
@@ -88,6 +87,24 @@ function* guess(grid : Grid<Square>, rowConstraints : number[], columnConstraint
     else
     {
         throw new Error(`Bug: there should be at least one unknown`);
+    }
+
+
+    function pickPosition() : Maybe<Position>
+    {
+        return maximumBy(grid.positions, p => heuristic(p));
+    }
+
+    function heuristic(position : Position) : number
+    {
+        if ( isUnknownAt(grid, position) )
+        {
+            return countTreesAround(grid, position);
+        }
+        else
+        {
+            return Number.NEGATIVE_INFINITY;
+        }
     }
 }
 
@@ -106,7 +123,6 @@ export function setTreelessSquaresToEmpty(grid : Grid<Square>)
         return isUnknownAt(grid, position) && !hasTreeAround(grid, position);
     }
 }
-
 
 export function intersectionOfPossibilities(combinations : Iterable<Square[]>) : Maybe<{ common : Square[], emptyNeighbors : boolean[] }>
 {
@@ -203,7 +219,7 @@ function addPossibilityIntersectionsToSequence(sequence : Square[], constraint :
     {
         const { common, emptyNeighbors } = result.value;
 
-        for ( let i of indices(common) )
+        for ( let i = 0; i !== common.length; ++i )
         {
             if ( sequence[i].state === State.Unknown )
             {
@@ -270,7 +286,7 @@ function neighboringColumns(grid : Grid<Square>, x : number) : Square[][]
 
 export function isTentAllowedAt(grid : Grid<Square>, position : Position) : boolean
 {
-    return grid.at(position).state === State.Unknown && !hasTentAround(grid, position) && hasTreeAround(grid, position);
+    return grid.at(position).state === State.Unknown && !hasTentAround8(grid, position) && hasTreeAround(grid, position);
 }
 
 export function generatePossibilities(sequence : Square[], constraint : number, tentAllowed : (i : number) => boolean) : Iterable<Square[]>
@@ -335,7 +351,7 @@ function placeTentNextToTreesSurroundedByThreeEmptySquares(grid : Grid<Square>) 
 
 function placeTentNextToTreesSurroundedByThreeEmptySquaresAt(grid : Grid<Square>, position : Position)
 {
-    if ( grid.at(position).state === State.Tree )
+    if ( isTreeAt(grid, position) )
     {
         const unknowns = unknownsAround(grid, position);
         const nEmpty = countEmptyAround(grid, position);
@@ -345,6 +361,7 @@ function placeTentNextToTreesSurroundedByThreeEmptySquaresAt(grid : Grid<Square>
             const unknownPosition = unknowns[0];
 
             grid.at(unknownPosition).state = State.Tent;
+            surroundWithEmpty(grid, unknownPosition);
         }
     }
 }
@@ -366,28 +383,28 @@ function fillInUnambiguousSquares(grid : Grid<Square>, rowConstraints : number[]
 
     function processSequence(sequence : Square[], constraint : number) : boolean
     {
-        const unknowns = filter(sequence, s => s.state == State.Unknown);
+        const unknownPositions = filter(range(0, sequence.length), i => sequence[i].state == State.Unknown);
         const nTents = count(sequence, s => s.state == State.Tent);
 
         if ( nTents === constraint )
         {
-            for ( let unknown of unknowns )
+            for ( let unknownPosition of unknownPositions )
             {
-                unknown.state = State.Empty;
+                sequence[unknownPosition].state = State.Empty;
             }
 
             return true;
         }
-        else if ( nTents + unknowns.length === constraint )
+        else if ( nTents + unknownPositions.length === constraint )
         {
-            for ( let unknown of unknowns )
+            for ( let unknownPosition of unknownPositions )
             {
-                unknown.state = State.Tent;
+                sequence[unknownPosition].state = State.Tent;
             }
 
             return true;
         }
-        else if ( nTents + unknowns.length < constraint )
+        else if ( nTents + unknownPositions.length < constraint )
         {
             return false;
         }
@@ -396,4 +413,20 @@ function fillInUnambiguousSquares(grid : Grid<Square>, rowConstraints : number[]
             return true;
         }
     }
+}
+
+function surroundTentsWithEmpty(grid : Grid<Square>) : boolean
+{
+    for ( let position of grid.positions )
+    {
+        if ( isTentAt(grid, position) )
+        {
+            if ( !surroundWithEmpty(grid, position) )
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
 }

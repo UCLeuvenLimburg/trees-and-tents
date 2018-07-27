@@ -1,6 +1,6 @@
 import { State } from './state';
 export declare class Square {
-    constructor(initialValue: State);
     state: State;
+    constructor(state: State);
     copy(): Square;
 }
