@@ -24,3 +24,17 @@ export function* solve(trees : boolean[][], rowConstraints : number[], columnCon
         }
     }
 }
+
+export function solve1(trees : boolean[][], rowConstraints : number[], columnConstraints : number[]) : boolean[][]
+{
+    const solutions = Array.from(solve(trees, rowConstraints, columnConstraints));
+
+    if ( solutions.length !== 1 )
+    {
+        throw new Error(`${solutions.length} solutions found`);
+    }
+    else
+    {
+        return solutions[0];
+    }
+}
