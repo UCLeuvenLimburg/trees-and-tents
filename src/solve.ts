@@ -38,32 +38,36 @@ export function* generateSolutions(grid : Grid<Square>, rowConstraints : number[
 
 function simplifyGrid(grid : Grid<Square>, rowConstraints : number[], columnConstraints : number[]) : boolean
 {
-    let before : number;
-    let after : number;
+    let lastCount = Number.POSITIVE_INFINITY;
+    let simplifiers = [
+        () => placeTentNextToTreesSurroundedByThreeEmptySquares(grid),
+        () => fillInUnambiguousSquares(grid, rowConstraints, columnConstraints),
+        () => addPossibilityIntersections(grid, rowConstraints, columnConstraints)
+    ];
 
-    do
+    let i = 0;
+    while ( i < simplifiers.length )
     {
-        before = unknownCount(grid);
+        // console.log(`Simplifier ${i}`);
+        const simplifier = simplifiers[i];
+        simplifier();
+        const currentMetric = unknownCount(grid);
 
-        if ( before === 0 )
+        if ( currentMetric < lastCount )
         {
-            after = 0;
+             i = 0;
         }
         else
         {
-            placeTentNextToTreesSurroundedByThreeEmptySquares(grid);
-
-            if ( !fillInUnambiguousSquares(grid, rowConstraints, columnConstraints) || !addPossibilityIntersections(grid, rowConstraints, columnConstraints) )
-            {
-                return false;
-            }
-
-            after = unknownCount(grid);
+            i++;
         }
-    } while ( after < before );
+
+        lastCount = currentMetric;
+    }
 
     return isValid(grid, rowConstraints, columnConstraints);
 }
+
 
 function* guess(grid : Grid<Square>, rowConstraints : number[], columnConstraints : number[]) : Iterable<Grid<Square>>
 {
@@ -115,14 +119,13 @@ export function intersectionOfPossibilities(combinations : Iterable<Square[]>) :
     }
     else
     {
-        let iterationsLeft = 4;
         const common = first.value;
         const emptyNeighbors = repeat<boolean>(common.length, true);
         updateEmptyNeighbors(emptyNeighbors, first.value);
 
         let current = iterator.next();
 
-        while ( !current.done )
+        while ( !current.done && (any(common, x => x.state !== State.Unknown) || any(emptyNeighbors, x => x)) )
         {
             const sequence = current.value;
 
@@ -136,18 +139,7 @@ export function intersectionOfPossibilities(combinations : Iterable<Square[]>) :
 
             updateEmptyNeighbors(emptyNeighbors, sequence);
 
-            if ( iterationsLeft > 0 )
-            {
-                iterationsLeft--;
-                current = iterator.next();
-            }
-            else
-            {
-                return Maybe.just({
-                    common: common.map(_ => new Square(State.Unknown)),
-                    emptyNeighbors: emptyNeighbors.map(_ => false)
-                });
-            }
+            current = iterator.next();
         }
 
         return Maybe.just( { common, emptyNeighbors } );
@@ -326,7 +318,7 @@ function findUnknownPosition(grid : Grid<Square>) : Maybe<Position>
     return find( grid.positions, p => isUnknownAt(grid, p) );
 }
 
-function placeTentNextToTreesSurroundedByThreeEmptySquares(grid : Grid<Square>)
+function placeTentNextToTreesSurroundedByThreeEmptySquares(grid : Grid<Square>) : boolean
 {
     for ( let y = 0;  y !== grid.height; ++y )
     {
@@ -337,6 +329,8 @@ function placeTentNextToTreesSurroundedByThreeEmptySquares(grid : Grid<Square>)
             placeTentNextToTreesSurroundedByThreeEmptySquaresAt(grid, position);
         }
     }
+
+    return true;
 }
 
 function placeTentNextToTreesSurroundedByThreeEmptySquaresAt(grid : Grid<Square>, position : Position)
