@@ -20,7 +20,7 @@ export function* solve(trees : boolean[][], rowConstraints : number[], columnCon
 
         for ( let solution of generateSolutions(grid, rowConstraints, columnConstraints) )
         {
-            yield solution.map(s => s.state === State.Tent).toRowArray();
+            yield solution.map(s => s.state === State.Tent).toColumnArray();
         }
     }
 }
