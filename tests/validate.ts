@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { sequenceSatisfiesConstraint, containsTouchingTents, containsLoneTent, containsLoneTree, tentTreeBijectionExists } from '../src/validate';
 import { parse, parseSequence } from '../src/parse';
-import { show } from '../src/show';
+import { show } from '../src/util';
 
 
 
