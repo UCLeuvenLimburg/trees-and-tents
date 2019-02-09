@@ -26,18 +26,18 @@
   },
   "homepage": "https://github.com/UCLeuvenLimburg/maybe#readme",
   "devDependencies": {
-    "@types/chai": "^4.1.4",
+    "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.5",
-    "@types/node": "^10.5.3",
-    "chai": "^4.1.2",
+    "@types/node": "^10.12.24",
+    "chai": "^4.2.0",
     "mocha": "^5.2.0",
-    "ts-loader": "^4.4.2",
-    "ts-node": "^7.0.0",
-    "tslint": "^5.11.0",
+    "ts-loader": "^4.5.0",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.12.1",
     "tslint-loader": "^3.6.0",
     "typescript": "^2.9.2",
-    "webpack": "^4.16.2",
-    "webpack-cli": "^3.1.0"
+    "webpack": "^4.29.3",
+    "webpack-cli": "^3.2.3"
   },
   "dependencies": {
     "js-algorithms": "github:UCLeuvenLimburg/js-algorithms",
